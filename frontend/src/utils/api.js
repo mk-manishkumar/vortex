@@ -44,3 +44,16 @@ export const getConversations = async () => {
     throw error;
   }
 };
+
+// Delete conversation endpoint
+export const deleteConversation = async (id) => {
+  try {
+    const result = await apiClient.delete(`/conversations/${id}`);
+    toast.success("✅ Conversation deleted!");
+    return result.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.error || error.message || "Failed to delete conversation";
+    toast.error(errorMessage);
+    throw error;
+  }
+};

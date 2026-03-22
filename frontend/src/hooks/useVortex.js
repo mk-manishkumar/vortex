@@ -7,9 +7,7 @@ import { stripMarkdown } from "../utils/stripMarkdown";
 // Function to limit response to 100 words
 const limitToHundredWords = (text) => {
   const words = text.split(/\s+/);
-  if (words.length > 100) {
-    return words.slice(0, 100).join(" ") + "...";
-  }
+  if (words.length > 75) return words.slice(0, 75).join(" ") + "...";
   return text;
 };
 

@@ -1,8 +1,6 @@
 import axios from "axios";
 import { Conversation } from "../model/Conversation.model.js";
 
-const isDevelopment = process.env.NODE_ENV === "development";
-
 // Controller to ask AI
 export const askAI = async (req, res) => {
   try {
@@ -37,7 +35,7 @@ export const askAI = async (req, res) => {
 
     res.status(200).json({ response: aiResponse });
   } catch (error) {
-    if (isDevelopment) console.error("Detailed Error:", { message: error.message, status: error.response?.status, data: error.response?.data });
+    console.error("Detailed Error:", { message: error.message, status: error.response?.status, data: error.response?.data });
     res.status(500).json({ error: "Failed to get response from AI" });
   }
 };
@@ -58,11 +56,9 @@ export const saveConversation = async (req, res) => {
 
     const savedConversation = await newConversation.save();
 
-    if (isDevelopment) console.log("Conversation saved successfully:", savedConversation._id);
-
     res.status(201).json({ message: "Conversation saved successfully", id: savedConversation._id });
   } catch (error) {
-    if (isDevelopment)   console.error("Error saving conversation:", error.message);
+    console.error("Error saving conversation:", error.message);
     res.status(500).json({ error: "Failed to save conversation" });
   }
 };
@@ -73,7 +69,23 @@ export const getAllConversations = async (req, res) => {
     const conversations = await Conversation.find().sort({ createdAt: -1 });
     res.status(200).json(conversations);
   } catch (error) {
-    if (isDevelopment) console.error("Error fetching conversations:", error.message);
+    console.error("Error fetching conversations:", error.message);
     res.status(500).json({ error: "Failed to fetch conversations" });
+  }
+};
+
+// Delete conversation by ID
+export const deleteConversation = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) return res.status(400).json({ error: "Conversation ID is required" });
+
+    const deletedConversation = await Conversation.findByIdAndDelete(id);
+    if (!deletedConversation) return res.status(404).json({ error: "Conversation not found" });
+
+    res.status(200).json({ message: "Conversation deleted successfully", id: deletedConversation._id });
+  } catch (error) {
+    console.error("Error deleting conversation:", error.message);
+    res.status(500).json({ error: "Failed to delete conversation" });
   }
 };

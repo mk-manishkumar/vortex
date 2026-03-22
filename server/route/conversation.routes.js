@@ -1,5 +1,5 @@
 import express from "express";
-import { askAI, saveConversation, getAllConversations } from "../controller/conversation.controller.js";
+import { askAI, saveConversation, getAllConversations, deleteConversation } from "../controller/conversation.controller.js";
 
 const router = express.Router();
 
@@ -11,5 +11,8 @@ router.post("/save-conversation", saveConversation);
 
 // GET route to fetch all conversations
 router.get("/conversations", getAllConversations);
+
+// DELETE route to delete a conversation by ID
+router.delete("/conversations/:id", deleteConversation);
 
 export default router;
