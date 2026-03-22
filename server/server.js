@@ -28,4 +28,6 @@ connectDB();
 app.use("/api", conversationRoutes);
 
 // Test endpoint
-app.get("/", (req, res) => res.json({ message: "Vortex Backend is running!" }));
+app.get("/", (req, res) => res.send("<h1>Vortex Backend is running! 🚀</h1>"));
+
+export default app;
