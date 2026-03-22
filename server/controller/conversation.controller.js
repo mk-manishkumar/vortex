@@ -35,7 +35,6 @@ export const askAI = async (req, res) => {
 
     res.status(200).json({ response: aiResponse });
   } catch (error) {
-    console.error("Detailed Error:", { message: error.message, status: error.response?.status, data: error.response?.data });
     res.status(500).json({ error: "Failed to get response from AI" });
   }
 };
@@ -58,7 +57,6 @@ export const saveConversation = async (req, res) => {
 
     res.status(201).json({ message: "Conversation saved successfully", id: savedConversation._id });
   } catch (error) {
-    console.error("Error saving conversation:", error.message);
     res.status(500).json({ error: "Failed to save conversation" });
   }
 };
@@ -69,7 +67,6 @@ export const getAllConversations = async (req, res) => {
     const conversations = await Conversation.find().sort({ createdAt: -1 });
     res.status(200).json(conversations);
   } catch (error) {
-    console.error("Error fetching conversations:", error.message);
     res.status(500).json({ error: "Failed to fetch conversations" });
   }
 };
@@ -85,7 +82,6 @@ export const deleteConversation = async (req, res) => {
 
     res.status(200).json({ message: "Conversation deleted successfully", id: deletedConversation._id });
   } catch (error) {
-    console.error("Error deleting conversation:", error.message);
     res.status(500).json({ error: "Failed to delete conversation" });
   }
 };
