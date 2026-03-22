@@ -1,42 +1,54 @@
+import { useState } from "react";
+import { Toaster } from "react-hot-toast";
 import { useVortex } from "./hooks/useVortex";
 import { ButtonSection } from "./components/ButtonSection";
 import { Container } from "./components/Container";
 import { Header } from "./components/Header";
+import { ConversationsPage } from "./components/ConversationsPage";
 
 const App = () => {
-  const { response, isLoading, error, handleAskAI, handleSaveConversation, clearConversation } = useVortex();
+  const [currentPage, setCurrentPage] = useState("home");
+  const { response, isLoading, handleAskAI, handleSaveConversation, clearConversation } = useVortex();
 
   const handleRunFlow = async () => {
     const inputElement = document.getElementById("inputText");
-    if (inputElement?.value) await handleAskAI(inputElement.value);
+    const inputValue = inputElement?.value || "";
+    await handleAskAI(inputValue);
   };
 
   const handleSave = async () => {
     const result = await handleSaveConversation();
     if (result) {
-      alert("Conversation saved successfully!");
       clearConversation();
       const inputElement = document.getElementById("inputText");
       if (inputElement) inputElement.value = "";
     }
   };
 
+  const handleViewConversations = () => setCurrentPage("conversations");
+  const handleBackHome = () => setCurrentPage("home");
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center p-5">
-      <div className="w-full max-w-4xl">
-        {/* Header Section */}
-        <Header />
+    <>
+      <Toaster position="top-right" reverseOrder={false} />
 
-        {/* Error Message */}
-        {error && <div className="mb-5 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-sm">❌ {error}</div>}
+      {currentPage === "home" ? (
+        <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-800 flex flex-col items-center justify-center p-4 md:p-5">
+          <div className="w-full">
+            {/* Header Section */}
+            <Header />
 
-        {/* Flow Container */}
-        <Container response={response} isLoading={isLoading} />
+            {/* Flow Container */}
+            <Container response={response} isLoading={isLoading} onRunFlow={handleRunFlow} />
 
-        {/* Controls */}
-        <ButtonSection onRunFlow={handleRunFlow} onSave={handleSave} isLoading={isLoading} />
-      </div>
-    </div>
+            {/* Controls */}
+            <ButtonSection onSave={handleSave} onViewAll={handleViewConversations} isLoading={isLoading} />
+          </div>
+        </div>
+      ) : (
+        <ConversationsPage onBack={handleBackHome} />
+      )}
+    </>
   );
 };
 

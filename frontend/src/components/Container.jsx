@@ -2,19 +2,16 @@ import { InputNode } from "./childComponents/InputNode";
 import { LoadingSpinner } from "./childComponents/LoadingSpinner";
 import { OutputNode } from "./childComponents/OutputNode";
 
-export const Container = ({ response, isLoading }) => {
+export const Container = ({ response, isLoading, onRunFlow }) => {
   return (
-    <div className="bg-linear-to-br from-slate-800/60 to-slate-900/60 border border-cyan-500/20 rounded-3xl p-16 backdrop-blur-lg mb-10" style={{ boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)" }}>
+    <div className="w-11/12 max-w-7xl mx-auto mb-10 flex flex-col gap-8">
       {/* Nodes Wrapper */}
-      <div className="flex justify-between items-center gap-10">
-        {/* Input Node */}
-        <InputNode />
-
-        {/* Output Node */}
+      <div className="flex flex-col lg:flex-row gap-16 items-stretch">
+        <InputNode onRunFlow={onRunFlow} isLoading={isLoading} />
         <OutputNode response={response} />
       </div>
 
-      {/* Loading Spinner */}
+      {/* Loader */}
       {isLoading && <LoadingSpinner />}
     </div>
   );

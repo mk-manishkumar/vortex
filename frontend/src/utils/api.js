@@ -1,25 +1,21 @@
+import axios from "axios";
+import toast from "react-hot-toast";
+
 const API_BASE_URL = "http://localhost:5001/api";
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: { "Content-Type": "application/json" },
+});
 
 // Ask AI endpoint
 export const askAI = async (prompt) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/ask-ai`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to get AI response");
-    }
-
-    const data = await response.json();
-    return data.response;
+    const response = await apiClient.post("/ask-ai", { prompt });
+    return response.data.response;
   } catch (error) {
-    console.error("Error asking AI:", error.message);
+    const errorMessage = error.response?.data?.error || error.message || "Failed to get AI response";
+    toast.error(errorMessage);
     throw error;
   }
 };
@@ -27,23 +23,12 @@ export const askAI = async (prompt) => {
 // Save conversation endpoint
 export const saveConversation = async (prompt, response) => {
   try {
-    const apiResponse = await fetch(`${API_BASE_URL}/save-conversation`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ prompt, response }),
-    });
-
-    if (!apiResponse.ok) {
-      const errorData = await apiResponse.json();
-      throw new Error(errorData.error || "Failed to save conversation");
-    }
-
-    const data = await apiResponse.json();
-    return data;
+    const result = await apiClient.post("/save-conversation", { prompt, response });
+    toast.success("Conversation saved successfully!");
+    return result.data;
   } catch (error) {
-    console.error("Error saving conversation:", error.message);
+    const errorMessage = error.response?.data?.error || error.message || "Failed to save conversation";
+    toast.error(errorMessage);
     throw error;
   }
 };
@@ -51,22 +36,11 @@ export const saveConversation = async (prompt, response) => {
 // Get all conversations endpoint
 export const getConversations = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/conversations`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to fetch conversations");
-    }
-
-    const data = await response.json();
-    return data;
+    const response = await apiClient.get("/conversations");
+    return response.data;
   } catch (error) {
-    console.error("Error fetching conversations:", error.message);
+    const errorMessage = error.response?.data?.error || error.message || "Failed to fetch conversations";
+    toast.error(errorMessage);
     throw error;
   }
 };
