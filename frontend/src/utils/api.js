@@ -49,7 +49,7 @@ export const getConversations = async () => {
 export const deleteConversation = async (id) => {
   try {
     const result = await apiClient.delete(`/conversations/${id}`);
-    toast.success("✅ Conversation deleted!");
+    toast.success("Conversation deleted!");
     return result.data;
   } catch (error) {
     const errorMessage = error.response?.data?.error || error.message || "Failed to delete conversation";
