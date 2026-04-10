@@ -8,7 +8,6 @@ import conversationRoutes from "./route/conversation.routes.js";
 
 const app = express();
 
-// Parse CORS origins from .env
 const FRONTEND_URLS = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",").map((url) => url.trim()) : ["http://localhost:5173"];
 
 // CORS Configuration
@@ -28,6 +27,6 @@ connectDB();
 app.use("/api", conversationRoutes);
 
 // Test endpoint
-app.get("/", (req, res) => res.send("<h1>Vortex Backend is running! 🚀</h1>"));
+app.get("/", (req, res) => res.send("<h1>Vortex Backend is running! </h1>"));
 
 export default app;
