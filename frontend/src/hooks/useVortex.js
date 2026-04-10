@@ -4,8 +4,8 @@ import toast from "react-hot-toast";
 import { askAI, saveConversation } from "../utils/api";
 import { stripMarkdown } from "../utils/stripMarkdown";
 
-// Function to limit response to 100 words
-const limitToHundredWords = (text) => {
+// Function to limit response to 75 words
+const limitWords = (text) => {
   const words = text.split(/\s+/);
   if (words.length > 75) return words.slice(0, 75).join(" ") + "...";
   return text;
@@ -33,7 +33,7 @@ export const useVortex = () => {
       aiResponse = stripMarkdown(aiResponse);
 
       // Limit response to 100 words
-      const limitedResponse = limitToHundredWords(aiResponse);
+      const limitedResponse = limitWords(aiResponse);
 
       setPrompt(inputPrompt);
       setResponse(limitedResponse);
